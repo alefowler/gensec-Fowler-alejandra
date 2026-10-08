@@ -1,6 +1,6 @@
 """Interactive ReAct agent with Python, web search, and arXiv tools.
 
-Requires the OPENAI_API_KEY environment variable to be set.
+Requires the GOOGLE_API_KEY and GOOGLE_MODEL environment variables to be set.
 """
 
 import os
@@ -11,9 +11,7 @@ from langchain_community.tools import ArxivQueryRun, DuckDuckGoSearchRun
 from langchain_community.utilities import ArxivAPIWrapper
 from langchain_core.prompts import PromptTemplate
 from langchain_experimental.tools import PythonREPLTool
-from langchain_openai import ChatOpenAI
-
-MODEL_NAME = "gpt-4o-mini"
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 REACT_TEMPLATE = """Answer the following questions as best you can. You have access to the following tools:
 
@@ -36,15 +34,15 @@ Question: {input}
 Thought:{agent_scratchpad}"""
 
 
-def get_api_key():
-    """Return the OpenAI API key from the OPENAI_API_KEY environment variable.
+def get_env(name):
+    """Return the value of the environment variable `name`.
 
     Exits the program with an error message if the variable is not set.
     """
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        sys.exit("Error: set the OPENAI_API_KEY environment variable first.")
-    return api_key
+    value = os.environ.get(name)
+    if not value:
+        sys.exit(f"Error: set the {name} environment variable first.")
+    return value
 
 
 def build_tools():
@@ -53,9 +51,9 @@ def build_tools():
     return [PythonREPLTool(), DuckDuckGoSearchRun(), arxiv]
 
 
-def build_agent(api_key):
-    """Build an AgentExecutor that runs a ReAct agent over the tools from build_tools()."""
-    llm = ChatOpenAI(model=MODEL_NAME, temperature=0, api_key=api_key)
+def build_agent(model, api_key):
+    """Build an AgentExecutor that runs a Gemini ReAct agent over the tools from build_tools()."""
+    llm = ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
     tools = build_tools()
     prompt = PromptTemplate.from_template(REACT_TEMPLATE)
     agent = create_react_agent(llm, tools, prompt)
@@ -70,7 +68,7 @@ def build_agent(api_key):
 
 def main():
     """Read questions from the user in a loop and print the agent's answers."""
-    executor = build_agent(get_api_key())
+    executor = build_agent(get_env("GOOGLE_MODEL"), get_env("GOOGLE_API_KEY"))
     print("Ask a question (type 'exit' or 'quit' to stop).")
     while True:
         try:
