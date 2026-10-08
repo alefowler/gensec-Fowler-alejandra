@@ -1,0 +1,6 @@
+langchain<1.0
+langchain-community<1.0
+langchain-experimental<1.0
+langchain-openai<1.0
+ddgs
+arxiv<3
