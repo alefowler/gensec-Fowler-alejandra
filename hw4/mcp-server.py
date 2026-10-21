@@ -7,7 +7,7 @@ Tools:
 - text_stats: Return word count, character count, and line count for text.
 """
 
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("Custom Text Tools")
 
