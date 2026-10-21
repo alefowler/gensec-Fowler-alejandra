@@ -5,6 +5,7 @@ Tools:
 - caesar_encode: Encode text using a Caesar cipher shift.
 - caesar_decode: Decode text using a Caesar cipher shift.
 - text_stats: Return word count, character count, and line count for text.
+- reverse_text: Return the input text reversed.
 """
 
 from mcp.server.fastmcp import FastMCP
@@ -16,6 +17,7 @@ def _shift_char(ch: str, shift: int) -> str:
     """Shift a single alphabetic character by `shift` positions, wrapping around the alphabet. Non-alphabetic characters are returned unchanged."""
     if ch.isupper():
         return chr((ord(ch) - ord('A') + shift) % 26 + ord('A'))
+        
     if ch.islower():
         return chr((ord(ch) - ord('a') + shift) % 26 + ord('a'))
     return ch
@@ -66,6 +68,20 @@ async def text_stats(text: str) -> str:
     chars = len(text)
     lines = len(text.splitlines()) or 1
     return f"Words: {words}, Characters: {chars}, Lines: {lines}"
+
+
+@mcp.tool("reverse_text")
+async def reverse_text(text: str) -> str:
+    """
+    Reverse the order of characters in a string.
+
+    Args:
+        text: The text to reverse.
+
+    Returns:
+        The input text with its characters in reverse order.
+    """
+    return text[::-1]
 
 
 if __name__ == "__main__":
