@@ -1,0 +1,6 @@
+Build a simple File Integrity Monitor in Python, in hw6/file_integrity_monitor.py. 
+It should: take a directory path, compute SHA-256 hashes of all files in it, and 
+save a baseline to a JSON file. When run again with a "check" mode, it should 
+recompute hashes and compare against the baseline, reporting any files that were 
+modified, added, or deleted. Use docstrings, and make it runnable from the command 
+line with arguments for the directory and mode (baseline or check).
